@@ -370,7 +370,7 @@ class Progression(Scale):
 
 ## !!! Puedo hacer una lista de los tipos de acordes diatónicos usando regex
 
-### Progression Tests
+## Progression Tests
 # p1 = Progression(["A7", "Dm", "G", "C"])
 # print(p1.prog, p1.scale, p1.analysis)
 
