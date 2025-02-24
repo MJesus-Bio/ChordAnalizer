@@ -7,7 +7,6 @@ import collections
 ## Funca como prototipo, tengo que testear con muchas progresiones, comunes y raras
 ## No implementé lo de las enarmonías, si lo uso en LaCuerda o similares lo voy a necesitar
 ## El programa no sabe procesar inversiones
-## Solo puede leer cifrado americano
 
 class Note:
     notes = {
@@ -266,42 +265,10 @@ class Progression(Scale):
                 new_scale = Scale(Chord(c).note, "Major")
                 ans.append(new_scale.analyze_progression(prog, loop=self.loop))
                 scales.append(new_scale.scale_name)
-        points_major = [self.evaluate_major(x) for x in ans]
+        points_major = [self.evaluate_major2(x) for x in ans]
         winner_idx = points_major.index(max(points_major))
         self.set_scale(scales[winner_idx])
         return ans[winner_idx]
-    
-    ## Tiene mérito, pero tengo que incorporar algo para chequear las séptimas apropiadas
-    # points = {
-    #     ("I"): 10, 
-    #     ("IIm"): 6,
-    #     ("IIIm"): 5,
-    #     ("IV"): 8,
-    #     ("V"): 9,
-    #     ("VIm"): 7,
-    #     ("VIImb5"): 2,
-    #     ("V", "I"): 5,
-    #     ("IV", "I"): 4,
-    #     ("IVm", "I"): 4,
-    #     ("bVII", "I"): 2,
-    #     ("IIm", "V"): 5,
-    #     ("IV", "V"): 5,
-    #     ("bVI", "bVII"): 2
-    # }
-
-    # def new_evaluate(self, ans):
-    #     test_ans = ans[:]
-    #     points = 0
-    #     if self.loop:
-    #         test_ans.append(ans[0])
-        
-    #     for prog, p in zip(Progression.points.keys(), Progression.points.values()):
-    #         if isinstance(prog, str):
-    #             prog = [prog]
-    #         if self.is_in_prog(prog, test_ans):
-    #             points += p
-
-    #     return points
 
     def evaluate_major(self, ans):
         ## La diva, chequea por grados diatónicos y por algunas cadencias
@@ -350,7 +317,35 @@ class Progression(Scale):
                     ## bVII I
                     points += 2
         return points
-    
+
+    def evaluate_major2(self, ans):
+        points = 0
+        if self.is_in_prog(["I"], ans):
+            points += 10
+            if self.is_in_prog(["V", "I"], ans):
+                points += 10
+            elif self.is_in_prog(["IV", "I"], ans) or self.is_in_prog(["IVm", "I"], ans):
+                points += 4
+            elif self.is_in_prog(["bVII", "I"], ans):
+                points += 2
+            elif self.is_in_prog(["Im"], ans):
+                points -= 50
+        elif self.is_in_prog(["IIm"], ans):
+            points += 6
+        elif self.is_in_prog(["IIIm"], ans):
+            points += 5   
+        elif self.is_in_prog(["IV"], ans):
+            points += 8
+        elif self.is_in_prog(["V"], ans):
+            points += 9
+            if self.is_in_prog(["IIm", "V"], ans) or self.is_in_prog(["IV", "V"], ans):
+                points += 10
+        elif self.is_in_prog(["VIm"], ans):
+            points += 7
+        elif self.is_in_prog(["bVI", "bVII"], ans):
+            points += 2
+        return points
+
     def is_in_prog(self, test_prog, ans=False):
         if not ans:
             ans = self.analysis
@@ -363,7 +358,7 @@ class Progression(Scale):
             prog = [re.sub("[0-9Maj]", "", x) for x in prog] ## Chequear mb5
             progs.append(prog)
         if test_prog in progs:
-            print(test_prog, "appears in this progression")
+            # print(test_prog, "appears in this progression")
             return True
         else:
             return False

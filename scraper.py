@@ -67,19 +67,19 @@ class UltimateGuitar(Link):
 #     print(w1.prog.analysis)
 #     w1.prog.is_in_prog(["IV", "V", "I"])
 
-url = "https://acordes.lacuerda.net/andres_calamaro/"
-test = Link(url)
-# print(test.soup)
-div_container = test.soup.find('div', {'class': 'tNav'})
-links = div_container.find_all("a")
-for link in links:
-    print(link.get('href'))
-links = [url + link.get('href') for link in links]
-print(links)
+# url = "https://acordes.lacuerda.net/abel_pintos/"
+# test = Link(url)
+# # print(test.soup)
+# div_container = test.soup.find('div', {'class': 'tNav'})
+# links = div_container.find_all("a")
+# for link in links:
+#     print(link.get('href'))
+# links = [url + link.get('href') for link in links]
+# print(links)
 
-for link in links:
-    all_tabs = Link(link)
-    best_tab = re.findall(r"\d+", str(all_tabs.soup.select('[id*="cal"]')[0]))[0]
-    best_tab = best_tab if int(best_tab) > 1 else ""
-    best_tab = LaCuerda(link + "-" + best_tab + ".shtml")
-    print(best_tab.url, best_tab.prog.scale)
+# for link in links:
+#     all_tabs = Link(link)
+#     best_tab = re.findall(r"\d+", str(all_tabs.soup.select('[id*="cal"]')[0]))[0]
+#     best_tab = best_tab if int(best_tab) > 1 else ""
+#     best_tab = LaCuerda(link + "-" + best_tab + ".shtml")
+#     print(best_tab.url, best_tab.prog.scale)
