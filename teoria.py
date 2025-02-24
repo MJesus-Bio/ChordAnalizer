@@ -278,11 +278,11 @@ class Progression(Scale):
 
         points_major = [self.evaluate_major2(x) for x in ans_major]
         points_minor = [self.evaluate_minor(x) for x in ans_minor]
-        for x in range(len(scales_major)):
-            print(scales_major[x], points_major[x])
-        for x in range(len(scales_minor)):
-            print(scales_minor[x], points_minor[x])
-            
+        # for x in range(len(scales_major)):
+        #     print(scales_major[x], points_major[x])
+        # for x in range(len(scales_minor)):
+        #     print(scales_minor[x], points_minor[x])
+   
         if max(points_major) > max(points_minor):
             points = points_major
             scales = scales_major

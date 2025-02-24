@@ -36,6 +36,7 @@ class AcordesDCanciones(Link):
         chords = [re.sub("\\xa0", "", x.get_text()) for x in self.chords]
         chords = " ".join(chords)
         return chords
+
     
 class UltimateGuitar(Link):
     def __init__(self, url):
@@ -67,9 +68,8 @@ class UltimateGuitar(Link):
 #     print(w1.prog.analysis)
 #     w1.prog.is_in_prog(["IV", "V", "I"])
 
-# url = "https://acordes.lacuerda.net/abel_pintos/"
+# url = "https://acordes.lacuerda.net/airbag/"
 # test = Link(url)
-# # print(test.soup)
 # div_container = test.soup.find('div', {'class': 'tNav'})
 # links = div_container.find_all("a")
 # for link in links:
@@ -80,6 +80,6 @@ class UltimateGuitar(Link):
 # for link in links:
 #     all_tabs = Link(link)
 #     best_tab = re.findall(r"\d+", str(all_tabs.soup.select('[id*="cal"]')[0]))[0]
-#     best_tab = best_tab if int(best_tab) > 1 else ""
-#     best_tab = LaCuerda(link + "-" + best_tab + ".shtml")
+#     best_tab = "-" + best_tab if int(best_tab) > 1 else ""
+#     best_tab = LaCuerda(link + best_tab + ".shtml")
 #     print(best_tab.url, best_tab.prog.scale)
