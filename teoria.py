@@ -263,62 +263,16 @@ class Progression(Scale):
             scales = []
             for c in prog:
                 new_scale = Scale(Chord(c).note, "Major")
-                ans.append(new_scale.analyze_progression(prog, loop=self.loop))
-                scales.append(new_scale.scale_name)
+                name = new_scale.scale_name
+                if name not in scales:
+                    ans.append(new_scale.analyze_progression(prog, loop=self.loop))
+                    scales.append(name)
         points_major = [self.evaluate_major2(x) for x in ans]
         for x in range(len(scales)):
             print(scales[x], points_major[x])
         winner_idx = points_major.index(max(points_major))
         self.set_scale(scales[winner_idx])
         return ans[winner_idx]
-
-    def evaluate_major(self, ans):
-        ## La diva, chequea por grados diatónicos y por algunas cadencias
-        points = 0
-        last = ""
-        for c in ans:
-            if c in Progression.degrees_major[0]:
-                points += 10
-                if last in Progression.degrees_major[4]:
-                    ## V I
-                    points += 5
-                elif last in Progression.degrees_major[3] or last in Progression.degrees_minor[3]:
-                    ## IV I o IVm I
-                    points += 4
-                elif last in Progression.degrees_minor[6]:
-                    ## bVII I
-                    points += 2
-            elif c in Progression.degrees_major[1]:
-                points += 6
-            elif c in Progression.degrees_major[2]:
-                points += 5
-            elif c in Progression.degrees_major[3]:
-                points += 8
-            elif c in Progression.degrees_major[4]:
-                points += 9
-                if last in Progression.degrees_major[1] or last in Progression.degrees_major[3]:
-                    ## IIm V o IV V
-                    points += 5
-            elif c in Progression.degrees_major[5]:
-                points += 7
-            elif c in Progression.degrees_major[6]:
-                points += 2
-            elif c in Progression.degrees_minor[6] and last in Progression.degrees_minor[5]:
-                ## bVI bVII
-                points += 2
-            last = c
-        if self.loop:
-            if c[0] in Progression.degrees_major[0]:
-                if last in Progression.degrees_major[4]:
-                    ## V I
-                    points += 5
-                elif last in Progression.degrees_major[3] or last in Progression.degrees_minor[3]:
-                    ## IV I o IVm I
-                    points += 4
-                elif last in Progression.degrees_minor[6]:
-                    ## bVII I
-                    points += 2
-        return points
 
     def evaluate_major2(self, ans):
         points = 0
@@ -330,20 +284,50 @@ class Progression(Scale):
                 points += 4
             if self.is_in_prog(["bVII", "I"], ans):
                 points += 2
-        elif self.is_in_prog(["IIm"], ans):
+        if self.is_in_prog(["IIm"], ans):
             points += 6
-        elif self.is_in_prog(["IIIm"], ans):
+        if self.is_in_prog(["IIIm"], ans):
             points += 5   
-        elif self.is_in_prog(["IV"], ans):
+        if self.is_in_prog(["IV"], ans):
             points += 8
-        elif self.is_in_prog(["V"], ans):
+        if self.is_in_prog(["V"], ans):
             points += 9
             if self.is_in_prog(["IIm", "V", "I"], ans) or self.is_in_prog(["IV", "V", "I"], ans):
                 points += 10
-        elif self.is_in_prog(["VIm"], ans):
+        if self.is_in_prog(["VIm"], ans):
             points += 7
-        elif self.is_in_prog(["bVI", "bVII"], ans):
+        if self.is_in_prog(["bVI", "bVII"], ans):
             points += 2
+        return points
+
+    def evaluate_minor(self, ans):
+        points = 0
+        if self.is_in_prog(["Im"], ans):
+            points += 10
+            if self.is_in_prog(["V", "Im"], ans):
+                points += 10
+            if self.is_in_prog(["Vm", "Im"], ans):
+                points += 8
+            if self.is_in_prog(["IV", "Im"], ans) or self.is_in_prog(["IVm", "Im"], ans):
+                points += 4
+            if self.is_in_prog(["bVII", "Im"], ans):
+                points += 2
+        # elif self.is_in_prog(["IIm"], ans):
+        #     points += 6
+        if self.is_in_prog(["bIII"], ans):
+            points += 6   
+        if self.is_in_prog(["IVm"], ans):
+            points += 8
+        if self.is_in_prog(["IV"], ans):
+            points += 4
+        if self.is_in_prog(["Vm"], ans):
+            points += 9
+            if self.is_in_prog(["bVI", "V", "I"], ans) or self.is_in_prog(["IVm", "V", "I"], ans):
+                points += 10
+        if self.is_in_prog(["bVI"], ans):
+            points += 7
+        if self.is_in_prog(["bVI", "bVII"], ans):
+            points += 4
         return points
 
     def is_in_prog(self, test_prog, ans=False):
