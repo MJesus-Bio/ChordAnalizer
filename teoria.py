@@ -266,6 +266,8 @@ class Progression(Scale):
                 ans.append(new_scale.analyze_progression(prog, loop=self.loop))
                 scales.append(new_scale.scale_name)
         points_major = [self.evaluate_major2(x) for x in ans]
+        for x in range(len(scales)):
+            print(scales[x], points_major[x])
         winner_idx = points_major.index(max(points_major))
         self.set_scale(scales[winner_idx])
         return ans[winner_idx]
@@ -324,12 +326,10 @@ class Progression(Scale):
             points += 10
             if self.is_in_prog(["V", "I"], ans):
                 points += 10
-            elif self.is_in_prog(["IV", "I"], ans) or self.is_in_prog(["IVm", "I"], ans):
+            if self.is_in_prog(["IV", "I"], ans) or self.is_in_prog(["IVm", "I"], ans):
                 points += 4
-            elif self.is_in_prog(["bVII", "I"], ans):
+            if self.is_in_prog(["bVII", "I"], ans):
                 points += 2
-            elif self.is_in_prog(["Im"], ans):
-                points -= 50
         elif self.is_in_prog(["IIm"], ans):
             points += 6
         elif self.is_in_prog(["IIIm"], ans):
@@ -338,7 +338,7 @@ class Progression(Scale):
             points += 8
         elif self.is_in_prog(["V"], ans):
             points += 9
-            if self.is_in_prog(["IIm", "V"], ans) or self.is_in_prog(["IV", "V"], ans):
+            if self.is_in_prog(["IIm", "V", "I"], ans) or self.is_in_prog(["IV", "V", "I"], ans):
                 points += 10
         elif self.is_in_prog(["VIm"], ans):
             points += 7
