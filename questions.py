@@ -1,6 +1,6 @@
 from scraper import UltimateGuitar
 
-url = "https://es.ultimate-guitar.com/tab/amy-winehouse/back-to-black-chords-467281"
+url = "https://es.ultimate-guitar.com/tab/christina-perri/a-thousand-years-chords-1101795"
 w1 = UltimateGuitar(url)
 # print(w1.chord_list)
 print(w1.prog.analysis)

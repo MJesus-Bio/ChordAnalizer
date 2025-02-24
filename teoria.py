@@ -259,18 +259,40 @@ class Progression(Scale):
             ans = scale.analyze_progression(prog, loop=self.loop)
             return ans
         else:
-            ans = []
-            scales = []
+            ans_major = []
+            scales_major = []
+            ans_minor = []
+            scales_minor = []
             for c in prog:
                 new_scale = Scale(Chord(c).note, "Major")
                 name = new_scale.scale_name
-                if name not in scales:
-                    ans.append(new_scale.analyze_progression(prog, loop=self.loop))
-                    scales.append(name)
-        points_major = [self.evaluate_major2(x) for x in ans]
-        for x in range(len(scales)):
-            print(scales[x], points_major[x])
-        winner_idx = points_major.index(max(points_major))
+                if name not in scales_major:
+                    ans_major.append(new_scale.analyze_progression(prog, loop=self.loop))
+                    scales_major.append(name)
+                
+                new_scale = Scale(Chord(c).note, "Minor")
+                name = new_scale.scale_name
+                if name not in scales_minor:
+                    ans_minor.append(new_scale.analyze_progression(prog, loop=self.loop))
+                    scales_minor.append(name)
+
+        points_major = [self.evaluate_major2(x) for x in ans_major]
+        points_minor = [self.evaluate_minor(x) for x in ans_minor]
+        for x in range(len(scales_major)):
+            print(scales_major[x], points_major[x])
+        for x in range(len(scales_minor)):
+            print(scales_minor[x], points_minor[x])
+            
+        if max(points_major) > max(points_minor):
+            points = points_major
+            scales = scales_major
+            ans = ans_major
+        else:
+            points = points_minor
+            scales = scales_minor
+            ans = ans_minor
+
+        winner_idx = points.index(max(points))
         self.set_scale(scales[winner_idx])
         return ans[winner_idx]
 
